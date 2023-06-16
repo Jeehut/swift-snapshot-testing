@@ -33,9 +33,14 @@ public func takeSnapshot<Value, Format>(
           .appendingPathComponent("__Snapshots__")
           .appendingPathComponent(fileName)
 
-      let testName = testName.hasPrefix("test") ? sanitizePathComponent(String(testName.dropFirst("test".count))) : sanitizePathComponent(testName)
+      let snapshotName: String
+      if let name {
+        snapshotName = sanitizePathComponent(name)
+      } else {
+        snapshotName = testName.hasPrefix("test") ? sanitizePathComponent(String(testName.dropFirst("test".count))) : sanitizePathComponent(testName)
+      }
       let snapshotFileUrl = snapshotDirectoryUrl
-        .appendingPathComponent(testName)
+        .appendingPathComponent(snapshotName)
         .appendingPathExtension(snapshotting.pathExtension ?? "")
       let fileManager = FileManager.default
       try fileManager.createDirectory(at: snapshotDirectoryUrl, withIntermediateDirectories: true)
